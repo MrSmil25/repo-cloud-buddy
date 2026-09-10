@@ -207,6 +207,33 @@ function DashboardPage() {
         </Link>
       )}
 
+      {myPendingCancels > 0 && (
+        <Link
+          to="/workspace"
+          className="block rounded-2xl border bg-card p-5 shadow-sm transition-colors hover:bg-accent/40"
+        >
+          Permintaan batal task kamu ({myPendingCancels}) masih menunggu keputusan Kadiv.
+        </Link>
+      )}
+
+      {myPendingHelp > 0 && (
+        <Link
+          to="/help-requests"
+          className="block rounded-2xl border bg-card p-5 shadow-sm transition-colors hover:bg-accent/40"
+        >
+          Request bantuan kamu ({myPendingHelp}) menunggu keputusan Kadiv divisi tujuan.
+        </Link>
+      )}
+
+      {kadiv && decisionsWaiting > 0 && (
+        <Link
+          to="/help-requests"
+          className="block rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900 shadow-sm transition-colors hover:bg-amber-100"
+        >
+          {decisionsWaiting} permintaan menunggu keputusanmu.
+        </Link>
+      )}
+
       <UrgentBanners />
       <WelcomeGuideCard />
 
