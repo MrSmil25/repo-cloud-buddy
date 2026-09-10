@@ -30,6 +30,7 @@ import {
   BookOpen,
   AlertTriangle,
   Vote,
+  PieChart,
 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase-external";
@@ -70,6 +71,7 @@ const navSections = [
   {
     label: "KEUANGAN",
     items: [
+      { to: "/finance-summary", label: "Ringkasan Keuangan", icon: PieChart },
       { to: "/fund-requests", label: "Pengajuan Dana", icon: Wallet },
       { to: "/budgets", label: "Anggaran", icon: PiggyBank },
       { to: "/transactions", label: "Feed Keuangan", icon: Receipt },
