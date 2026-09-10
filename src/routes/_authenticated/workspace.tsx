@@ -92,6 +92,8 @@ function WorkspacePage() {
   const [showPrivate, setShowPrivate] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [blockTarget, setBlockTarget] = useState<{ id: string; title: string } | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<{ id: string; title: string } | null>(null);
+  const [tab, setTab] = useState<"board" | "cancels">("board");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
@@ -107,6 +109,39 @@ function WorkspacePage() {
     queryKey: ["task-link-options"],
     queryFn: fetchLinkOptions,
     enabled: formOpen,
+  });
+
+  const { data: originMaps } = useQuery({
+    queryKey: ["task-origin-maps"],
+    queryFn: fetchOriginMaps,
+  });
+
+  const kadiv = isKadiv(profile?.role);
+  const canDecideCancels = kadiv || isBPHOrSupervisor(profile?.role);
+  const pendingCancelCount = usePendingCancelCount();
+
+  const { data: myPendingCancels = [] } = useQuery({
+    queryKey: ["my-pending-cancels", userId],
+    queryFn: () => fetchMyPendingCancelRequests(userId as string),
+    enabled: !!userId,
+  });
+  const pendingCancelTaskIds = new Set(myPendingCancels.map((r) => r.task_id));
+
+  const cancelMutation = useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      kadiv ? cancelTaskDirect(id, reason) : createCancelRequest(id, reason),
+    onSuccess: () => {
+      toast.success(
+        kadiv
+          ? "Task dibatalkan."
+          : "Permintaan dikirim ke Kadiv. Otomatis disetujui dalam 3 hari kalau tidak diputuskan.",
+      );
+      setCancelTarget(null);
+      queryClient.invalidateQueries({ queryKey: ["my-workspace"] });
+      queryClient.invalidateQueries({ queryKey: ["my-pending-cancels"] });
+      queryClient.invalidateQueries({ queryKey: ["cancel-requests"] });
+    },
+    onError: (e: Error) => toast.error(e.message || "Gagal memproses pembatalan."),
   });
 
   const moveMutation = useMutation({
