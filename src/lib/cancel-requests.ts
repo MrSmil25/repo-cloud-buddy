@@ -57,15 +57,18 @@ export async function decideCancelRequest(
   const { data: userData } = await supabase.auth.getUser();
   const user = userData.user;
   if (!user) throw new Error("Sesi kamu habis. Masuk lagi ya.");
-  const { error } = await db
-    .from("task_cancel_requests")
-    .update({
-      status: approve ? "Approved" : "Rejected",
-      approver_id: user.id,
-      approver_response: response ?? null,
-      decided_at: new Date().toISOString(),
-    })
-    .eq("id", id);
+
+  // Hanya update tabel task_cancel_requests. Trigger apply_cancel_decision akan
+  // otomatis mengubah tasks.status menjadi 'Cancelled' saat status = 'Approved'.
+  const patch: Record<string, unknown> = {
+    status: approve ? "Approved" : "Rejected",
+    approver_id: user.id,
+  };
+  if (!approve) {
+    patch.approver_response = response ?? null;
+  }
+
+  const { error } = await db.from("task_cancel_requests").update(patch).eq("id", id);
   if (error) throw error;
 }
 
