@@ -41,6 +41,10 @@ export type MyTask = {
   key_result_id: string | null;
   related_event_id: string | null;
   related_deal_id: string | null;
+  origin_type: string | null;
+  origin_note: string | null;
+  created_by: string | null;
+  division?: string | null;
 };
 
 export type MyDeal = {
@@ -63,7 +67,7 @@ export type MyKeyResult = {
 export type OptionRow = { id: string; label: string };
 
 const TASK_FIELDS =
-  "id,title,description,status,priority,due_date,completed_at,is_private,key_result_id,related_event_id,related_deal_id";
+  "id,title,description,status,priority,due_date,completed_at,is_private,key_result_id,related_event_id,related_deal_id,origin_type,origin_note,created_by,division";
 
 export function isOverdue(task: { due_date: string | null; status: string }) {
   if (!task.due_date || task.status === "Done" || task.status === "Cancelled") return false;
