@@ -54,6 +54,12 @@ export function MemberProgressCard({
     enabled: expanded,
   });
 
+  const { data: originMaps } = useQuery({
+    queryKey: ["task-origin-maps"],
+    queryFn: fetchOriginMaps,
+    enabled: expanded,
+  });
+
   return (
     <article className="rounded-2xl border bg-card shadow-sm">
       <button
