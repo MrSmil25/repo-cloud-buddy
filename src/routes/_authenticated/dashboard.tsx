@@ -16,6 +16,8 @@ import { fetchProposals, isEligibleVoter } from "@/lib/proposals";
 import { isBPH } from "@/hooks/useProfile";
 import { isBPHOrSupervisor } from "@/lib/hr";
 import { fetchWallets } from "@/lib/finance-summary";
+import { fetchCancelRequests } from "@/lib/cancel-requests";
+import { fetchHelpRequests } from "@/lib/help-requests";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
