@@ -61,6 +61,7 @@ const navSections = [
     items: [
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
       { to: "/workspace", label: "Ruang Kerja Saya", icon: BriefcaseBusiness },
+      { to: "/help-requests", label: "Request Bantuan", icon: LifeBuoy },
       { to: "/calendar", label: "Kalender", icon: CalendarDays },
       { to: "/mentor-tasks", label: "Tugas dari Pembina", icon: GraduationCap },
     ] as const,
