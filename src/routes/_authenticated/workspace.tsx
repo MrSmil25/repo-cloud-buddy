@@ -369,6 +369,17 @@ function WorkspacePage() {
         onSubmit={(values) => createMutation.mutate(values)}
       />
 
+      <CancelRequestDialog
+        open={!!cancelTarget}
+        onOpenChange={(o) => !o && setCancelTarget(null)}
+        taskTitle={cancelTarget?.title}
+        direct={kadiv}
+        submitting={cancelMutation.isPending}
+        onSubmit={(reason) =>
+          cancelTarget && cancelMutation.mutate({ id: cancelTarget.id, reason })
+        }
+      />
+
       <BlockedTaskDialog
         open={!!blockTarget}
         taskTitle={blockTarget?.title}
