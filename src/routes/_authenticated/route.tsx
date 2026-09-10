@@ -31,6 +31,7 @@ import {
   AlertTriangle,
   Vote,
   PieChart,
+  LifeBuoy,
 } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase-external";
