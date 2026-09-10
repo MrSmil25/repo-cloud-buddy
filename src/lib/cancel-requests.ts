@@ -65,7 +65,7 @@ export async function decideCancelRequest(
     approver_id: user.id,
   };
   if (!approve) {
-    patch.approver_response = response ?? null;
+    patch["approver_response"] = response ?? null;
   }
 
   const { error } = await db.from("task_cancel_requests").update(patch).eq("id", id);
