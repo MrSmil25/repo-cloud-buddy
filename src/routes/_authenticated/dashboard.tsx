@@ -111,6 +111,31 @@ function DashboardPage() {
     (w) => w.member?.division === profile?.division,
   ).length;
 
+  const { data: cancelRequests = [] } = useQuery({
+    queryKey: ["cancel-requests"],
+    queryFn: fetchCancelRequests,
+    enabled: !!profile?.id,
+  });
+  const { data: helpRequests = [] } = useQuery({
+    queryKey: ["help-requests"],
+    queryFn: fetchHelpRequests,
+    enabled: !!profile?.id,
+  });
+  const myPendingCancels = cancelRequests.filter(
+    (r) => r.status === "Pending" && r.requested_by === profile?.id,
+  ).length;
+  const myPendingHelp = helpRequests.filter(
+    (r) => r.status === "Pending" && r.requested_by === profile?.id,
+  ).length;
+  const decisionsWaiting =
+    cancelRequests.filter((r) => r.status === "Pending" && r.requested_by !== profile?.id).length +
+    helpRequests.filter(
+      (r) =>
+        r.status === "Pending" &&
+        r.requested_by !== profile?.id &&
+        r.target_division === profile?.division,
+    ).length;
+
   const bphOrSupervisor = isBPH(profile?.role) || isBPHOrSupervisor(profile?.role);
   const { data: proposals = [] } = useQuery({
     queryKey: ["proposals"],
