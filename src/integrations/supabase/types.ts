@@ -1877,6 +1877,223 @@ export type Database = {
           },
         ]
       }
+      help_requests: {
+        Row: {
+          approver_id: string | null
+          approver_response: string | null
+          created_at: string | null
+          decided_at: string | null
+          due_date: string | null
+          expires_at: string
+          final_assignee_id: string | null
+          generated_task_id: string | null
+          id: string
+          priority: Database["public"]["Enums"]["task_priority"]
+          related_deal_id: string | null
+          related_event_id: string | null
+          requested_by: string
+          requester_division: string | null
+          status: Database["public"]["Enums"]["help_request_status"]
+          suggested_assignee_id: string | null
+          target_division: string
+          task_description: string | null
+          task_title: string
+          updated_at: string | null
+        }
+        Insert: {
+          approver_id?: string | null
+          approver_response?: string | null
+          created_at?: string | null
+          decided_at?: string | null
+          due_date?: string | null
+          expires_at?: string
+          final_assignee_id?: string | null
+          generated_task_id?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["task_priority"]
+          related_deal_id?: string | null
+          related_event_id?: string | null
+          requested_by: string
+          requester_division?: string | null
+          status?: Database["public"]["Enums"]["help_request_status"]
+          suggested_assignee_id?: string | null
+          target_division: string
+          task_description?: string | null
+          task_title: string
+          updated_at?: string | null
+        }
+        Update: {
+          approver_id?: string | null
+          approver_response?: string | null
+          created_at?: string | null
+          decided_at?: string | null
+          due_date?: string | null
+          expires_at?: string
+          final_assignee_id?: string | null
+          generated_task_id?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["task_priority"]
+          related_deal_id?: string | null
+          related_event_id?: string | null
+          requested_by?: string
+          requester_division?: string | null
+          status?: Database["public"]["Enums"]["help_request_status"]
+          suggested_assignee_id?: string | null
+          target_division?: string
+          task_description?: string | null
+          task_title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "help_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "member_holdings"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "member_progress"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "help_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "workload_distribution"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_final_assignee_id_fkey"
+            columns: ["final_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "member_holdings"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_final_assignee_id_fkey"
+            columns: ["final_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "member_progress"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_final_assignee_id_fkey"
+            columns: ["final_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "help_requests_final_assignee_id_fkey"
+            columns: ["final_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "workload_distribution"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_generated_task_id_fkey"
+            columns: ["generated_task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "help_requests_related_deal_id_fkey"
+            columns: ["related_deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "help_requests_related_event_id_fkey"
+            columns: ["related_event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "help_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "member_holdings"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "member_progress"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "help_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "workload_distribution"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_requester_division_fkey"
+            columns: ["requester_division"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "help_requests_suggested_assignee_id_fkey"
+            columns: ["suggested_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "member_holdings"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_suggested_assignee_id_fkey"
+            columns: ["suggested_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "member_progress"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_suggested_assignee_id_fkey"
+            columns: ["suggested_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "help_requests_suggested_assignee_id_fkey"
+            columns: ["suggested_assignee_id"]
+            isOneToOne: false
+            referencedRelation: "workload_distribution"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "help_requests_target_division_fkey"
+            columns: ["target_division"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       invitations: {
         Row: {
           assigned_division: string | null
@@ -3017,6 +3234,112 @@ export type Database = {
           },
         ]
       }
+      task_cancel_requests: {
+        Row: {
+          approver_id: string | null
+          approver_response: string | null
+          created_at: string | null
+          decided_at: string | null
+          expires_at: string
+          id: string
+          reason: string
+          requested_by: string
+          status: Database["public"]["Enums"]["cancel_request_status"]
+          task_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          approver_id?: string | null
+          approver_response?: string | null
+          created_at?: string | null
+          decided_at?: string | null
+          expires_at?: string
+          id?: string
+          reason: string
+          requested_by: string
+          status?: Database["public"]["Enums"]["cancel_request_status"]
+          task_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          approver_id?: string | null
+          approver_response?: string | null
+          created_at?: string | null
+          decided_at?: string | null
+          expires_at?: string
+          id?: string
+          reason?: string
+          requested_by?: string
+          status?: Database["public"]["Enums"]["cancel_request_status"]
+          task_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_cancel_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "member_holdings"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "member_progress"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_approver_id_fkey"
+            columns: ["approver_id"]
+            isOneToOne: false
+            referencedRelation: "workload_distribution"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "member_holdings"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "member_progress"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "workload_distribution"
+            referencedColumns: ["member_id"]
+          },
+          {
+            foreignKeyName: "task_cancel_requests_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tasks: {
         Row: {
           assignee_id: string | null
@@ -3032,6 +3355,8 @@ export type Database = {
           id: string
           is_private: boolean
           key_result_id: string | null
+          origin_note: string | null
+          origin_type: string | null
           priority: Database["public"]["Enums"]["task_priority"]
           related_deal_id: string | null
           related_event_id: string | null
@@ -3053,6 +3378,8 @@ export type Database = {
           id?: string
           is_private?: boolean
           key_result_id?: string | null
+          origin_note?: string | null
+          origin_type?: string | null
           priority?: Database["public"]["Enums"]["task_priority"]
           related_deal_id?: string | null
           related_event_id?: string | null
@@ -3074,6 +3401,8 @@ export type Database = {
           id?: string
           is_private?: boolean
           key_result_id?: string | null
+          origin_note?: string | null
+          origin_type?: string | null
           priority?: Database["public"]["Enums"]["task_priority"]
           related_deal_id?: string | null
           related_event_id?: string | null
@@ -3840,6 +4169,8 @@ export type Database = {
       }
     }
     Functions: {
+      auto_approve_cancel_requests: { Args: never; Returns: undefined }
+      auto_reject_help_requests: { Args: never; Returns: undefined }
       can_access_division: { Args: { target_div: string }; Returns: boolean }
       can_access_event: { Args: { target_event: string }; Returns: boolean }
       claim_invite: { Args: { p_code: string }; Returns: string }
@@ -3952,6 +4283,7 @@ export type Database = {
           votes_cast: number
         }[]
       }
+      remind_stale_tasks: { Args: never; Returns: undefined }
       run_daily_reminders: { Args: never; Returns: undefined }
       take_okr_snapshot: {
         Args: { p_period: Database["public"]["Enums"]["okr_period"] }
@@ -3973,6 +4305,11 @@ export type Database = {
       announcement_scope: "Organisasi" | "Divisi"
       assignment_scope: "Semua" | "Divisi" | "Individu"
       budget_status: "On_Budget" | "Warning" | "Over_Budget"
+      cancel_request_status:
+        | "Pending"
+        | "Approved"
+        | "Rejected"
+        | "Auto_Approved"
       coaching_topic:
         | "Reguler"
         | "Beban_Kerja"
@@ -4031,6 +4368,11 @@ export type Database = {
         | "Disbursed"
         | "Reported"
       fund_urgency: "Normal" | "Urgent" | "Emergency"
+      help_request_status:
+        | "Pending"
+        | "Approved"
+        | "Rejected"
+        | "Cancelled_By_Requester"
       invite_kind: "Kode_Divisi" | "Link_Personal"
       letter_approval:
         | "Auto_Approved"
@@ -4228,6 +4570,12 @@ export const Constants = {
       announcement_scope: ["Organisasi", "Divisi"],
       assignment_scope: ["Semua", "Divisi", "Individu"],
       budget_status: ["On_Budget", "Warning", "Over_Budget"],
+      cancel_request_status: [
+        "Pending",
+        "Approved",
+        "Rejected",
+        "Auto_Approved",
+      ],
       coaching_topic: [
         "Reguler",
         "Beban_Kerja",
@@ -4293,6 +4641,12 @@ export const Constants = {
         "Reported",
       ],
       fund_urgency: ["Normal", "Urgent", "Emergency"],
+      help_request_status: [
+        "Pending",
+        "Approved",
+        "Rejected",
+        "Cancelled_By_Requester",
+      ],
       invite_kind: ["Kode_Divisi", "Link_Personal"],
       letter_approval: [
         "Auto_Approved",
