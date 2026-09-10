@@ -33,7 +33,7 @@ export function HelpRequestWizard({
   members: { id: string; full_name: string; role: string | null; division: string | null }[];
   events: Option[];
   myDivision: string | null;
-  submitting?: boolean;
+  submitting?: boolean | undefined;
   onSubmit: (input: NewHelpRequest) => void;
 }) {
   const [step, setStep] = useState(0);

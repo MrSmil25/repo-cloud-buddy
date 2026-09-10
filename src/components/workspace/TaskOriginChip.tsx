@@ -13,8 +13,8 @@ export function TaskOriginChip({
     created_by?: string | null;
     related_event_id?: string | null;
   };
-  maps?: OriginMaps;
-  className?: string;
+  maps?: OriginMaps | undefined;
+  className?: string | undefined;
 }) {
   const chip = originChip(task, maps);
   if (!chip) return null;

@@ -20,10 +20,10 @@ export function CancelRequestDialog({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  taskTitle?: string;
+  taskTitle?: string | undefined;
   /** Kadiv membatalkan langsung, bukan mengajukan. */
-  direct?: boolean;
-  submitting?: boolean;
+  direct?: boolean | undefined;
+  submitting?: boolean | undefined;
   onSubmit: (reason: string) => void;
 }) {
   const [reason, setReason] = useState("");

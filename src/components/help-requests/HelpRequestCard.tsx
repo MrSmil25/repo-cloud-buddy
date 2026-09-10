@@ -23,11 +23,11 @@ export function HelpRequestCard({
   request: HelpRequest;
   requesterName: string;
   divisionName: (code: string | null) => string;
-  canDecide?: boolean;
-  isMine?: boolean;
-  onApprove?: () => void;
-  onReject?: () => void;
-  onCancel?: () => void;
+  canDecide?: boolean | undefined;
+  isMine?: boolean | undefined;
+  onApprove?: (() => void) | undefined;
+  onReject?: (() => void) | undefined;
+  onCancel?: (() => void) | undefined;
 }) {
   const pending = request.status === "Pending";
   return (

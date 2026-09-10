@@ -32,11 +32,11 @@ function TaskCard({
   onDragStart,
 }: {
   task: MyTask;
-  maps?: OriginMaps;
-  pendingCancel?: boolean;
-  canCancel?: boolean;
-  directCancel?: boolean;
-  onCancel?: CancelHandler;
+  maps?: OriginMaps | undefined;
+  pendingCancel?: boolean | undefined;
+  canCancel?: boolean | undefined;
+  directCancel?: boolean | undefined;
+  onCancel?: CancelHandler | undefined;
   onDragStart: () => void;
 }) {
   const overdue = isOverdue(task);
@@ -130,11 +130,11 @@ export function KanbanBoard({
 }: {
   tasks: MyTask[];
   onMove: (id: string, status: TaskStatus) => void;
-  maps?: OriginMaps;
-  pendingCancelTaskIds?: Set<string>;
-  canCancel?: boolean;
-  directCancel?: boolean;
-  onCancel?: CancelHandler;
+  maps?: OriginMaps | undefined;
+  pendingCancelTaskIds?: Set<string> | undefined;
+  canCancel?: boolean | undefined;
+  directCancel?: boolean | undefined;
+  onCancel?: CancelHandler | undefined;
 }) {
   const [dragId, setDragId] = useState<string | null>(null);
   const [overCol, setOverCol] = useState<string | null>(null);

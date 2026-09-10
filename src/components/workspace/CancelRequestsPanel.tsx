@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import type { OriginMaps } from "@/lib/task-origin";
 
-export function CancelRequestsPanel({ maps }: { maps?: OriginMaps }) {
+export function CancelRequestsPanel({ maps }: { maps?: OriginMaps | undefined }) {
   const queryClient = useQueryClient();
   const [rejectId, setRejectId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState("");
