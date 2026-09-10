@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Briefcase, Calendar, Lock, Target } from "lucide-react";
+import { Briefcase, Calendar, Lock, MoreVertical, Target } from "lucide-react";
 import {
   PRIORITY_CLASS,
   TASK_PRIORITY_LABEL,
@@ -11,16 +11,74 @@ import {
 } from "@/lib/workspace";
 import { formatDateID } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import type { OriginMaps } from "@/lib/task-origin";
+import { TaskOriginChip } from "@/components/workspace/TaskOriginChip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-function TaskCard({ task, onDragStart }: { task: MyTask; onDragStart: () => void }) {
+type CancelHandler = (task: MyTask) => void;
+
+function TaskCard({
+  task,
+  maps,
+  pendingCancel,
+  canCancel,
+  directCancel,
+  onCancel,
+  onDragStart,
+}: {
+  task: MyTask;
+  maps?: OriginMaps | undefined;
+  pendingCancel?: boolean | undefined;
+  canCancel?: boolean | undefined;
+  directCancel?: boolean | undefined;
+  onCancel?: CancelHandler | undefined;
+  onDragStart: () => void;
+}) {
   const overdue = isOverdue(task);
+  const cancellable =
+    !!onCancel && !!canCancel && task.status !== "Done" && task.status !== "Cancelled";
+
   return (
     <article
       draggable
       onDragStart={onDragStart}
       className="cursor-grab space-y-2 rounded-xl border bg-card p-3 shadow-sm active:cursor-grabbing"
     >
-      <p className="text-sm font-medium leading-snug">{task.title}</p>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1 space-y-1">
+          <TaskOriginChip task={task} maps={maps} />
+          {pendingCancel && (
+            <span className="ml-1 inline-flex rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800">
+              Menunggu pembatalan
+            </span>
+          )}
+          <p className="text-sm font-medium leading-snug">{task.title}</p>
+        </div>
+        {cancellable && (
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              aria-label="Aksi task"
+              className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+            >
+              <MoreVertical className="size-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {pendingCancel ? (
+                <DropdownMenuItem disabled>Menunggu keputusan Kadiv</DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem onClick={() => onCancel?.(task)}>
+                  {directCancel ? "Batalkan task" : "Ajukan pembatalan"}
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
       <div className="flex flex-wrap items-center gap-1.5">
         <span
           className={cn(
@@ -64,9 +122,19 @@ function TaskCard({ task, onDragStart }: { task: MyTask; onDragStart: () => void
 export function KanbanBoard({
   tasks,
   onMove,
+  maps,
+  pendingCancelTaskIds,
+  canCancel,
+  directCancel,
+  onCancel,
 }: {
   tasks: MyTask[];
   onMove: (id: string, status: TaskStatus) => void;
+  maps?: OriginMaps | undefined;
+  pendingCancelTaskIds?: Set<string> | undefined;
+  canCancel?: boolean | undefined;
+  directCancel?: boolean | undefined;
+  onCancel?: CancelHandler | undefined;
 }) {
   const [dragId, setDragId] = useState<string | null>(null);
   const [overCol, setOverCol] = useState<string | null>(null);
@@ -103,7 +171,16 @@ export function KanbanBoard({
               <p className="px-1 text-xs text-muted-foreground">Belum ada task di sini.</p>
             ) : (
               items.map((t) => (
-                <TaskCard key={t.id} task={t} onDragStart={() => setDragId(t.id)} />
+                <TaskCard
+                  key={t.id}
+                  task={t}
+                  maps={maps}
+                  pendingCancel={pendingCancelTaskIds?.has(t.id)}
+                  canCancel={canCancel}
+                  directCancel={directCancel}
+                  onCancel={onCancel}
+                  onDragStart={() => setDragId(t.id)}
+                />
               ))
             )}
           </section>

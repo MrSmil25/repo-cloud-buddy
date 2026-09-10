@@ -17,6 +17,11 @@ export const NOTIF_TYPE_LABEL: Record<string, string> = {
   task_assigned: "Tugas",
   pengumuman: "Pengumuman",
   tugas_pembina: "Tugas Pembina",
+  task_cancel_req: "Permintaan Batal",
+  task_cancel_decision: "Keputusan Batal",
+  help_req: "Request Bantuan",
+  help_decision: "Keputusan Request",
+  task_stale: "Task Mangkrak",
 };
 
 export async function fetchNotifications(limit?: number): Promise<AppNotification[]> {

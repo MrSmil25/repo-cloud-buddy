@@ -23,6 +23,19 @@ import { MyReimbursementNotice } from "@/components/fund-requests/MyReimbursemen
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import { fetchOriginMaps } from "@/lib/task-origin";
+import { isKadiv, isBPHOrSupervisor } from "@/lib/hr";
+import { CancelRequestDialog } from "@/components/workspace/CancelRequestDialog";
+import {
+  CancelRequestsPanel,
+  usePendingCancelCount,
+} from "@/components/workspace/CancelRequestsPanel";
+import {
+  cancelTaskDirect,
+  createCancelRequest,
+  fetchMyPendingCancelRequests,
+} from "@/lib/cancel-requests";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/workspace")({
   head: () => ({
@@ -79,6 +92,8 @@ function WorkspacePage() {
   const [showPrivate, setShowPrivate] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [blockTarget, setBlockTarget] = useState<{ id: string; title: string } | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<{ id: string; title: string } | null>(null);
+  const [tab, setTab] = useState<"board" | "cancels">("board");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
@@ -94,6 +109,39 @@ function WorkspacePage() {
     queryKey: ["task-link-options"],
     queryFn: fetchLinkOptions,
     enabled: formOpen,
+  });
+
+  const { data: originMaps } = useQuery({
+    queryKey: ["task-origin-maps"],
+    queryFn: fetchOriginMaps,
+  });
+
+  const kadiv = isKadiv(profile?.role);
+  const canDecideCancels = kadiv || isBPHOrSupervisor(profile?.role);
+  const pendingCancelCount = usePendingCancelCount();
+
+  const { data: myPendingCancels = [] } = useQuery({
+    queryKey: ["my-pending-cancels", userId],
+    queryFn: () => fetchMyPendingCancelRequests(userId as string),
+    enabled: !!userId,
+  });
+  const pendingCancelTaskIds = new Set(myPendingCancels.map((r) => r.task_id));
+
+  const cancelMutation = useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      kadiv ? cancelTaskDirect(id, reason) : createCancelRequest(id, reason),
+    onSuccess: () => {
+      toast.success(
+        kadiv
+          ? "Task dibatalkan."
+          : "Permintaan dikirim ke Kadiv. Otomatis disetujui dalam 3 hari kalau tidak diputuskan.",
+      );
+      setCancelTarget(null);
+      queryClient.invalidateQueries({ queryKey: ["my-workspace"] });
+      queryClient.invalidateQueries({ queryKey: ["my-pending-cancels"] });
+      queryClient.invalidateQueries({ queryKey: ["cancel-requests"] });
+    },
+    onError: (e: Error) => toast.error(e.message || "Gagal memproses pembatalan."),
   });
 
   const moveMutation = useMutation({
@@ -186,38 +234,75 @@ function WorkspacePage() {
         )}
       </section>
 
-      <section className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold">Papan Task Saya</h2>
-          <label className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Switch checked={showPrivate} onCheckedChange={setShowPrivate} />
-            Tampilkan task privat
-          </label>
+      {canDecideCancels && (
+        <div className="flex flex-wrap gap-2">
+          {([
+            { key: "board" as const, label: "Papan Task Saya" },
+            { key: "cancels" as const, label: "Permintaan Pembatalan", badge: pendingCancelCount },
+          ]).map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={cn(
+                "flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                tab === t.key ? "bg-primary text-primary-foreground" : "bg-card hover:bg-accent",
+              )}
+            >
+              {t.label}
+              {!!t.badge && t.badge > 0 && (
+                <span className="rounded-full bg-destructive px-2 py-0.5 text-[11px] font-semibold text-destructive-foreground">
+                  {t.badge}
+                </span>
+              )}
+            </button>
+          ))}
         </div>
-        {isLoading ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-40 rounded-2xl" />
-            ))}
+      )}
+
+      {canDecideCancels && tab === "cancels" ? (
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold">Permintaan Pembatalan</h2>
+          <CancelRequestsPanel maps={originMaps} />
+        </section>
+      ) : (
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">Papan Task Saya</h2>
+            <label className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Switch checked={showPrivate} onCheckedChange={setShowPrivate} />
+              Tampilkan task privat
+            </label>
           </div>
-        ) : (
-          <KanbanBoard
-            tasks={visibleTasks}
-            onMove={(id, status) => {
-              const task = tasks.find((t) => t.id === id);
-              if (!task || task.status === status) return;
-              if (status === "Blocked") {
-                setBlockTarget({ id, title: task.title });
-                return;
-              }
-              moveMutation.mutate({ id, status });
-            }}
-          />
-        )}
-        <p className="text-xs text-muted-foreground">
-          Tarik kartu task ke kolom lain untuk mengubah statusnya.
-        </p>
-      </section>
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-40 rounded-2xl" />
+              ))}
+            </div>
+          ) : (
+            <KanbanBoard
+              tasks={visibleTasks}
+              maps={originMaps}
+              pendingCancelTaskIds={pendingCancelTaskIds}
+              canCancel
+              directCancel={kadiv}
+              onCancel={(task) => setCancelTarget({ id: task.id, title: task.title })}
+              onMove={(id, status) => {
+                const task = tasks.find((t) => t.id === id);
+                if (!task || task.status === status) return;
+                if (status === "Blocked") {
+                  setBlockTarget({ id, title: task.title });
+                  return;
+                }
+                moveMutation.mutate({ id, status });
+              }}
+            />
+          )}
+          <p className="text-xs text-muted-foreground">
+            Tarik kartu task ke kolom lain untuk mengubah statusnya.
+          </p>
+        </section>
+      )}
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Deal Saya</h2>
@@ -282,6 +367,17 @@ function WorkspacePage() {
         options={options}
         saving={createMutation.isPending}
         onSubmit={(values) => createMutation.mutate(values)}
+      />
+
+      <CancelRequestDialog
+        open={!!cancelTarget}
+        onOpenChange={(o) => !o && setCancelTarget(null)}
+        taskTitle={cancelTarget?.title}
+        direct={kadiv}
+        submitting={cancelMutation.isPending}
+        onSubmit={(reason) =>
+          cancelTarget && cancelMutation.mutate({ id: cancelTarget.id, reason })
+        }
       />
 
       <BlockedTaskDialog

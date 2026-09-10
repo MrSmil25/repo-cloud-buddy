@@ -27,6 +27,7 @@ import { Route as AuthenticatedDivisionsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedFinanceSummaryRouteImport } from './routes/_authenticated/finance-summary'
 import { Route as AuthenticatedFundApprovalsRouteImport } from './routes/_authenticated/fund-approvals'
 import { Route as AuthenticatedGuideRouteImport } from './routes/_authenticated/guide'
+import { Route as AuthenticatedHelpRequestsRouteImport } from './routes/_authenticated/help-requests'
 import { Route as AuthenticatedInvitationsRouteImport } from './routes/_authenticated/invitations'
 import { Route as AuthenticatedMemberProgressRouteImport } from './routes/_authenticated/member-progress'
 import { Route as AuthenticatedMembersRouteImport } from './routes/_authenticated/members'
@@ -154,6 +155,12 @@ const AuthenticatedGuideRoute = AuthenticatedGuideRouteImport.update({
   path: '/guide',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHelpRequestsRoute =
+  AuthenticatedHelpRequestsRouteImport.update({
+    id: '/help-requests',
+    path: '/help-requests',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedInvitationsRoute =
   AuthenticatedInvitationsRouteImport.update({
     id: '/invitations',
@@ -356,6 +363,7 @@ export interface FileRoutesByFullPath {
   '/finance-summary': typeof AuthenticatedFinanceSummaryRoute
   '/fund-approvals': typeof AuthenticatedFundApprovalsRoute
   '/guide': typeof AuthenticatedGuideRoute
+  '/help-requests': typeof AuthenticatedHelpRequestsRoute
   '/invitations': typeof AuthenticatedInvitationsRoute
   '/member-progress': typeof AuthenticatedMemberProgressRoute
   '/members': typeof AuthenticatedMembersRoute
@@ -407,6 +415,7 @@ export interface FileRoutesByTo {
   '/finance-summary': typeof AuthenticatedFinanceSummaryRoute
   '/fund-approvals': typeof AuthenticatedFundApprovalsRoute
   '/guide': typeof AuthenticatedGuideRoute
+  '/help-requests': typeof AuthenticatedHelpRequestsRoute
   '/invitations': typeof AuthenticatedInvitationsRoute
   '/member-progress': typeof AuthenticatedMemberProgressRoute
   '/members': typeof AuthenticatedMembersRoute
@@ -460,6 +469,7 @@ export interface FileRoutesById {
   '/_authenticated/finance-summary': typeof AuthenticatedFinanceSummaryRoute
   '/_authenticated/fund-approvals': typeof AuthenticatedFundApprovalsRoute
   '/_authenticated/guide': typeof AuthenticatedGuideRoute
+  '/_authenticated/help-requests': typeof AuthenticatedHelpRequestsRoute
   '/_authenticated/invitations': typeof AuthenticatedInvitationsRoute
   '/_authenticated/member-progress': typeof AuthenticatedMemberProgressRoute
   '/_authenticated/members': typeof AuthenticatedMembersRoute
@@ -513,6 +523,7 @@ export interface FileRouteTypes {
     | '/finance-summary'
     | '/fund-approvals'
     | '/guide'
+    | '/help-requests'
     | '/invitations'
     | '/member-progress'
     | '/members'
@@ -564,6 +575,7 @@ export interface FileRouteTypes {
     | '/finance-summary'
     | '/fund-approvals'
     | '/guide'
+    | '/help-requests'
     | '/invitations'
     | '/member-progress'
     | '/members'
@@ -616,6 +628,7 @@ export interface FileRouteTypes {
     | '/_authenticated/finance-summary'
     | '/_authenticated/fund-approvals'
     | '/_authenticated/guide'
+    | '/_authenticated/help-requests'
     | '/_authenticated/invitations'
     | '/_authenticated/member-progress'
     | '/_authenticated/members'
@@ -785,6 +798,13 @@ declare module '@tanstack/react-router' {
       path: '/guide'
       fullPath: '/guide'
       preLoaderRoute: typeof AuthenticatedGuideRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/help-requests': {
+      id: '/_authenticated/help-requests'
+      path: '/help-requests'
+      fullPath: '/help-requests'
+      preLoaderRoute: typeof AuthenticatedHelpRequestsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/invitations': {
@@ -1027,6 +1047,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFinanceSummaryRoute: typeof AuthenticatedFinanceSummaryRoute
   AuthenticatedFundApprovalsRoute: typeof AuthenticatedFundApprovalsRoute
   AuthenticatedGuideRoute: typeof AuthenticatedGuideRoute
+  AuthenticatedHelpRequestsRoute: typeof AuthenticatedHelpRequestsRoute
   AuthenticatedInvitationsRoute: typeof AuthenticatedInvitationsRoute
   AuthenticatedMemberProgressRoute: typeof AuthenticatedMemberProgressRoute
   AuthenticatedMembersRoute: typeof AuthenticatedMembersRoute
@@ -1074,6 +1095,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFinanceSummaryRoute: AuthenticatedFinanceSummaryRoute,
   AuthenticatedFundApprovalsRoute: AuthenticatedFundApprovalsRoute,
   AuthenticatedGuideRoute: AuthenticatedGuideRoute,
+  AuthenticatedHelpRequestsRoute: AuthenticatedHelpRequestsRoute,
   AuthenticatedInvitationsRoute: AuthenticatedInvitationsRoute,
   AuthenticatedMemberProgressRoute: AuthenticatedMemberProgressRoute,
   AuthenticatedMembersRoute: AuthenticatedMembersRoute,

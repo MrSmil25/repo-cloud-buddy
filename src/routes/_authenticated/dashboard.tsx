@@ -16,6 +16,8 @@ import { fetchProposals, isEligibleVoter } from "@/lib/proposals";
 import { isBPH } from "@/hooks/useProfile";
 import { isBPHOrSupervisor } from "@/lib/hr";
 import { fetchWallets } from "@/lib/finance-summary";
+import { fetchCancelRequests } from "@/lib/cancel-requests";
+import { fetchHelpRequests } from "@/lib/help-requests";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -109,6 +111,31 @@ function DashboardPage() {
     (w) => w.member?.division === profile?.division,
   ).length;
 
+  const { data: cancelRequests = [] } = useQuery({
+    queryKey: ["cancel-requests"],
+    queryFn: fetchCancelRequests,
+    enabled: !!profile?.id,
+  });
+  const { data: helpRequests = [] } = useQuery({
+    queryKey: ["help-requests"],
+    queryFn: fetchHelpRequests,
+    enabled: !!profile?.id,
+  });
+  const myPendingCancels = cancelRequests.filter(
+    (r) => r.status === "Pending" && r.requested_by === profile?.id,
+  ).length;
+  const myPendingHelp = helpRequests.filter(
+    (r) => r.status === "Pending" && r.requested_by === profile?.id,
+  ).length;
+  const decisionsWaiting =
+    cancelRequests.filter((r) => r.status === "Pending" && r.requested_by !== profile?.id).length +
+    helpRequests.filter(
+      (r) =>
+        r.status === "Pending" &&
+        r.requested_by !== profile?.id &&
+        r.target_division === profile?.division,
+    ).length;
+
   const bphOrSupervisor = isBPH(profile?.role) || isBPHOrSupervisor(profile?.role);
   const { data: proposals = [] } = useQuery({
     queryKey: ["proposals"],
@@ -177,6 +204,33 @@ function DashboardPage() {
               ? `Ops: ${formatRupiah(wallets.ops_saldo)} · Kas: ${formatRupiah(wallets.kas_saldo)}`
               : "Memuat ringkasan dompet…"}
           </p>
+        </Link>
+      )}
+
+      {myPendingCancels > 0 && (
+        <Link
+          to="/workspace"
+          className="block rounded-2xl border bg-card p-5 shadow-sm transition-colors hover:bg-accent/40"
+        >
+          Permintaan batal task kamu ({myPendingCancels}) masih menunggu keputusan Kadiv.
+        </Link>
+      )}
+
+      {myPendingHelp > 0 && (
+        <Link
+          to="/help-requests"
+          className="block rounded-2xl border bg-card p-5 shadow-sm transition-colors hover:bg-accent/40"
+        >
+          Request bantuan kamu ({myPendingHelp}) menunggu keputusan Kadiv divisi tujuan.
+        </Link>
+      )}
+
+      {kadiv && decisionsWaiting > 0 && (
+        <Link
+          to="/help-requests"
+          className="block rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-900 shadow-sm transition-colors hover:bg-amber-100"
+        >
+          {decisionsWaiting} permintaan menunggu keputusanmu.
         </Link>
       )}
 

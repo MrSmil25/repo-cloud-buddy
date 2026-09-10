@@ -11,6 +11,8 @@ import {
   type MemberProgress,
 } from "@/lib/workspace";
 import { cn } from "@/lib/utils";
+import { fetchOriginMaps } from "@/lib/task-origin";
+import { TaskOriginChip } from "@/components/workspace/TaskOriginChip";
 
 function Metric({
   label,
@@ -49,6 +51,12 @@ export function MemberProgressCard({
   const { data: detail, isLoading } = useQuery({
     queryKey: ["member-detail", member.member_id],
     queryFn: () => fetchMemberDetail(member.member_id),
+    enabled: expanded,
+  });
+
+  const { data: originMaps } = useQuery({
+    queryKey: ["task-origin-maps"],
+    queryFn: fetchOriginMaps,
     enabled: expanded,
   });
 
@@ -123,7 +131,10 @@ export function MemberProgressCard({
                   <ul className="mt-2 space-y-1.5">
                     {detail?.tasks.map((t) => (
                       <li key={t.id} className="flex flex-wrap items-center justify-between gap-2">
-                        <span>{t.title}</span>
+                        <span className="flex flex-wrap items-center gap-2">
+                          <TaskOriginChip task={t} maps={originMaps} />
+                          {t.title}
+                        </span>
                         <span className="text-xs text-muted-foreground">
                           {TASK_STATUS_LABEL[t.status] ?? t.status} · {formatDateID(t.due_date)}
                         </span>
