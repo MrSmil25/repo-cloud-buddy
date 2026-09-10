@@ -11,6 +11,8 @@ import {
   type MemberProgress,
 } from "@/lib/workspace";
 import { cn } from "@/lib/utils";
+import { fetchOriginMaps } from "@/lib/task-origin";
+import { TaskOriginChip } from "@/components/workspace/TaskOriginChip";
 
 function Metric({
   label,
