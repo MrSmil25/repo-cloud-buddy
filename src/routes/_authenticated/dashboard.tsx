@@ -15,6 +15,7 @@ import { countUnacknowledgedWarnings, fetchWarnings } from "@/lib/warnings";
 import { fetchProposals, isEligibleVoter } from "@/lib/proposals";
 import { isBPH } from "@/hooks/useProfile";
 import { isBPHOrSupervisor } from "@/lib/hr";
+import { fetchWallets } from "@/lib/finance-summary";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
