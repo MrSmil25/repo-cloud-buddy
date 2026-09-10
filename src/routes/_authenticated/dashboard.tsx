@@ -15,6 +15,7 @@ import { countUnacknowledgedWarnings, fetchWarnings } from "@/lib/warnings";
 import { fetchProposals, isEligibleVoter } from "@/lib/proposals";
 import { isBPH } from "@/hooks/useProfile";
 import { isBPHOrSupervisor } from "@/lib/hr";
+import { fetchWallets } from "@/lib/finance-summary";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -60,6 +61,15 @@ function DashboardPage() {
   const { data: deals = [] } = useQuery({ queryKey: ["deals"], queryFn: fetchDeals });
   const { data: finance } = useQuery({ queryKey: ["dashboard-finance"], queryFn: fetchDashboardFinance });
   const { data: events = [] } = useQuery({ queryKey: ["events"], queryFn: fetchEvents });
+
+  const canSeeWealth = ["Controller", "Ketua", "Waketu", "Supervisor"].includes(
+    profile?.role ?? "",
+  );
+  const { data: wallets } = useQuery({
+    queryKey: ["fin-wallets"],
+    queryFn: fetchWallets,
+    enabled: canSeeWealth,
+  });
 
   const cashManager = canManageCash(profile?.role);
   const { data: myBills = [] } = useQuery({ queryKey: ["my-bills"], queryFn: fetchMyBills });
@@ -152,6 +162,23 @@ function DashboardPage() {
           Ada usulan peringatan untuk kamu. Kamu berhak menyanggah.
         </Link>
       ))}
+
+      {canSeeWealth && (
+        <Link
+          to="/finance-summary"
+          className="block rounded-2xl border bg-card p-5 shadow-sm transition-colors hover:bg-accent/40"
+        >
+          <p className="text-sm text-muted-foreground">Total Kekayaan</p>
+          <p className="mt-1 text-3xl font-bold tracking-tight break-words">
+            {wallets ? formatRupiah(wallets.total_saldo) : "…"}
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {wallets
+              ? `Ops: ${formatRupiah(wallets.ops_saldo)} · Kas: ${formatRupiah(wallets.kas_saldo)}`
+              : "Memuat ringkasan dompet…"}
+          </p>
+        </Link>
+      )}
 
       <UrgentBanners />
       <WelcomeGuideCard />

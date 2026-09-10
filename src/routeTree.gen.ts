@@ -24,6 +24,7 @@ import { Route as AuthenticatedCommandCenterRouteImport } from './routes/_authen
 import { Route as AuthenticatedContributionsRouteImport } from './routes/_authenticated/contributions'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDivisionsRouteImport } from './routes/_authenticated/divisions'
+import { Route as AuthenticatedFinanceSummaryRouteImport } from './routes/_authenticated/finance-summary'
 import { Route as AuthenticatedFundApprovalsRouteImport } from './routes/_authenticated/fund-approvals'
 import { Route as AuthenticatedGuideRouteImport } from './routes/_authenticated/guide'
 import { Route as AuthenticatedInvitationsRouteImport } from './routes/_authenticated/invitations'
@@ -136,6 +137,12 @@ const AuthenticatedDivisionsRoute = AuthenticatedDivisionsRouteImport.update({
   path: '/divisions',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFinanceSummaryRoute =
+  AuthenticatedFinanceSummaryRouteImport.update({
+    id: '/finance-summary',
+    path: '/finance-summary',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedFundApprovalsRoute =
   AuthenticatedFundApprovalsRouteImport.update({
     id: '/fund-approvals',
@@ -346,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/contributions': typeof AuthenticatedContributionsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/divisions': typeof AuthenticatedDivisionsRoute
+  '/finance-summary': typeof AuthenticatedFinanceSummaryRoute
   '/fund-approvals': typeof AuthenticatedFundApprovalsRoute
   '/guide': typeof AuthenticatedGuideRoute
   '/invitations': typeof AuthenticatedInvitationsRoute
@@ -396,6 +404,7 @@ export interface FileRoutesByTo {
   '/contributions': typeof AuthenticatedContributionsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/divisions': typeof AuthenticatedDivisionsRoute
+  '/finance-summary': typeof AuthenticatedFinanceSummaryRoute
   '/fund-approvals': typeof AuthenticatedFundApprovalsRoute
   '/guide': typeof AuthenticatedGuideRoute
   '/invitations': typeof AuthenticatedInvitationsRoute
@@ -448,6 +457,7 @@ export interface FileRoutesById {
   '/_authenticated/contributions': typeof AuthenticatedContributionsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/divisions': typeof AuthenticatedDivisionsRoute
+  '/_authenticated/finance-summary': typeof AuthenticatedFinanceSummaryRoute
   '/_authenticated/fund-approvals': typeof AuthenticatedFundApprovalsRoute
   '/_authenticated/guide': typeof AuthenticatedGuideRoute
   '/_authenticated/invitations': typeof AuthenticatedInvitationsRoute
@@ -500,6 +510,7 @@ export interface FileRouteTypes {
     | '/contributions'
     | '/dashboard'
     | '/divisions'
+    | '/finance-summary'
     | '/fund-approvals'
     | '/guide'
     | '/invitations'
@@ -550,6 +561,7 @@ export interface FileRouteTypes {
     | '/contributions'
     | '/dashboard'
     | '/divisions'
+    | '/finance-summary'
     | '/fund-approvals'
     | '/guide'
     | '/invitations'
@@ -601,6 +613,7 @@ export interface FileRouteTypes {
     | '/_authenticated/contributions'
     | '/_authenticated/dashboard'
     | '/_authenticated/divisions'
+    | '/_authenticated/finance-summary'
     | '/_authenticated/fund-approvals'
     | '/_authenticated/guide'
     | '/_authenticated/invitations'
@@ -751,6 +764,13 @@ declare module '@tanstack/react-router' {
       path: '/divisions'
       fullPath: '/divisions'
       preLoaderRoute: typeof AuthenticatedDivisionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/finance-summary': {
+      id: '/_authenticated/finance-summary'
+      path: '/finance-summary'
+      fullPath: '/finance-summary'
+      preLoaderRoute: typeof AuthenticatedFinanceSummaryRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/fund-approvals': {
@@ -1004,6 +1024,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedContributionsRoute: typeof AuthenticatedContributionsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDivisionsRoute: typeof AuthenticatedDivisionsRoute
+  AuthenticatedFinanceSummaryRoute: typeof AuthenticatedFinanceSummaryRoute
   AuthenticatedFundApprovalsRoute: typeof AuthenticatedFundApprovalsRoute
   AuthenticatedGuideRoute: typeof AuthenticatedGuideRoute
   AuthenticatedInvitationsRoute: typeof AuthenticatedInvitationsRoute
@@ -1050,6 +1071,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedContributionsRoute: AuthenticatedContributionsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDivisionsRoute: AuthenticatedDivisionsRoute,
+  AuthenticatedFinanceSummaryRoute: AuthenticatedFinanceSummaryRoute,
   AuthenticatedFundApprovalsRoute: AuthenticatedFundApprovalsRoute,
   AuthenticatedGuideRoute: AuthenticatedGuideRoute,
   AuthenticatedInvitationsRoute: AuthenticatedInvitationsRoute,
